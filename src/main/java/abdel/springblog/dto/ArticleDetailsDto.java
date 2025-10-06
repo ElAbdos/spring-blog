@@ -4,15 +4,13 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 public class ArticleDetailsDto {
-    private String author;
-    private LocalDateTime publishedAt;
-    private String content;
-    private long likeCount;
-    private long dislikeCount;
-    private List<String> likedBy;
-    private List<String> dislikedBy;
-
-    public ArticleDetailsDto() {}
+    private final String author;
+    private final LocalDateTime publishedAt;
+    private final String content;
+    private final long likeCount;
+    private final long dislikeCount;
+    private final List<String> likedBy;
+    private final List<String> dislikedBy;
 
     public ArticleDetailsDto(String author, LocalDateTime publishedAt, String content,
                              long likeCount, long dislikeCount,
