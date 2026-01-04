@@ -1,10 +1,14 @@
 package abdel.springblog.models;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
+
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+@Getter
 @Entity
 @Table(name = "articles")
 public class Article {
@@ -12,18 +16,21 @@ public class Article {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Setter
     @Column(nullable = false)
     private LocalDateTime publishedAt = LocalDateTime.now();
 
+    @Setter
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
-    @JoinColumn(name = "author_id", nullable = false,
-            foreignKey = @ForeignKey(name = "fk_article_author"))
+    @JoinColumn(name = "author_id", nullable = false, foreignKey = @ForeignKey(name = "fk_article_author"))
     private User author;
 
+    @Setter
     @Lob
     @Column(nullable = false)
     private String content;
 
+    @Setter
     @OneToMany(mappedBy = "article", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Reaction> reactions = new ArrayList<>();
 
@@ -34,18 +41,4 @@ public class Article {
         this.content = content;
         this.publishedAt = LocalDateTime.now();
     }
-
-    public Long getId() { return id; }
-
-    public LocalDateTime getPublishedAt() { return publishedAt; }
-    public void setPublishedAt(LocalDateTime publishedAt) { this.publishedAt = publishedAt; }
-
-    public User getAuthor() { return author; }
-    public void setAuthor(User author) { this.author = author; }
-
-    public String getContent() { return content; }
-    public void setContent(String content) { this.content = content; }
-
-    public List<Reaction> getReactions() { return reactions; }
-    public void setReactions(List<Reaction> reactions) { this.reactions = reactions; }
 }

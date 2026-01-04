@@ -28,7 +28,7 @@ public class ArticleService {
         this.reactionRepository = reactionRepository;
     }
 
-    /**
+    /*
      * Crée un nouvel article
      */
     public ArticlePublicDto create(ArticleCreateDto dto) {
@@ -39,48 +39,42 @@ public class ArticleService {
         return toPublicDto(saved);
     }
 
-    /**
+    /*
      * Récupère la liste de tous les articles avec leurs informations publiques
      */
     @Transactional(readOnly = true)
     public List<ArticlePublicDto> listPublic() {
-        return articleRepository.findAll()
-                .stream()
-                .map(this::toPublicDto)
-                .collect(toList());
+        return articleRepository.findAll().stream().map(this::toPublicDto).collect(toList());
     }
 
-    /**
+    /*
      * Récupère les informations publiques d'un article par son ID
      */
     @Transactional(readOnly = true)
     public ArticlePublicDto getPublic(Long id) {
-        Article a = articleRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Article introuvable: " + id));
+        Article a = articleRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Article introuvable: " + id));
         return toPublicDto(a);
     }
 
-    /**
+    /*
      * Récupère les détails d'un article, y compris les réactions
      */
     @Transactional(readOnly = true)
     public ArticleDetailsDto getDetails(Long id) {
-        Article a = articleRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Article introuvable: " + id));
+        Article a = articleRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Article introuvable: " + id));
         return toDetailsDto(a);
     }
 
-    /**
+    /*
      * Met à jour le contenu d'un article
      */
     public ArticlePublicDto updateContent(Long id, String newContent) {
-        Article a = articleRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Article introuvable: " + id));
+        Article a = articleRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Article introuvable: " + id));
         a.setContent(newContent);
         return toPublicDto(a);
     }
 
-    /**
+    /*
      * Supprime un article par son ID
      */
     public void delete(Long id) {
@@ -90,46 +84,33 @@ public class ArticleService {
         articleRepository.deleteById(id);
     }
 
-    /**
+    /*
      * Ajoute ou met à jour une réaction (like/dislike) d'un utilisateur sur un article
      */
     public ArticleDetailsDto react(Long articleId, String username, ReactionType type) {
-        Article article = articleRepository.findById(articleId)
-                .orElseThrow(() -> new IllegalArgumentException("Article introuvable: " + articleId));
-        User user = userRepository.findByUsername(username)
-                .orElseThrow(() -> new IllegalArgumentException("Utilisateur introuvable: " + username));
+        Article article = articleRepository.findById(articleId).orElseThrow(() -> new IllegalArgumentException("Article introuvable: " + articleId));
+        User user = userRepository.findByUsername(username).orElseThrow(() -> new IllegalArgumentException("Utilisateur introuvable: " + username));
         Reaction existing = reactionRepository.findByArticleAndUser(article, user).orElse(null);
         if (existing == null) {
             reactionRepository.save(new Reaction(type, user, article));
         } else if (existing.getType() != type) {
             existing.setType(type);
         }
-
         return toDetailsDto(article);
     }
 
     private ArticlePublicDto toPublicDto(Article a) {
-        return new ArticlePublicDto(a.getAuthor().getUsername(), a.getPublishedAt(), a.getContent());
+        return new ArticlePublicDto(a.getId(), a.getAuthor().getUsername(), a.getPublishedAt(), a.getContent());
     }
 
-    /**
+    /*
      * Convertit une entité Article en DTO ArticleDetailsDto, en comptant les likes et dislikes
      */
     private ArticleDetailsDto toDetailsDto(Article a) {
         long likes = reactionRepository.countByArticleAndType(a, ReactionType.LIKE);
         long dislikes = reactionRepository.countByArticleAndType(a, ReactionType.DISLIKE);
-        List<String> likedBy = reactionRepository.findByArticleAndType(a, ReactionType.LIKE)
-                .stream().map(r -> r.getUser().getUsername()).collect(toList());
-        List<String> dislikedBy = reactionRepository.findByArticleAndType(a, ReactionType.DISLIKE)
-                .stream().map(r -> r.getUser().getUsername()).collect(toList());
-        return new ArticleDetailsDto(
-                a.getAuthor().getUsername(),
-                a.getPublishedAt(),
-                a.getContent(),
-                likes,
-                dislikes,
-                likedBy,
-                dislikedBy
-        );
+        List<String> likedBy = reactionRepository.findByArticleAndType(a, ReactionType.LIKE).stream().map(r -> r.getUser().getUsername()).collect(toList());
+        List<String> dislikedBy = reactionRepository.findByArticleAndType(a, ReactionType.DISLIKE).stream().map(r -> r.getUser().getUsername()).collect(toList());
+        return new ArticleDetailsDto(a.getId(), a.getAuthor().getUsername(), a.getPublishedAt(), a.getContent(), likes, dislikes, likedBy, dislikedBy);
     }
 }

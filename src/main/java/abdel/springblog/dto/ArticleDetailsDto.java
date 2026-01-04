@@ -1,9 +1,13 @@
 package abdel.springblog.dto;
 
+import lombok.Getter;
+
 import java.time.LocalDateTime;
 import java.util.List;
 
+@Getter
 public class ArticleDetailsDto {
+    private final Long id;
     private final String author;
     private final LocalDateTime publishedAt;
     private final String content;
@@ -12,9 +16,8 @@ public class ArticleDetailsDto {
     private final List<String> likedBy;
     private final List<String> dislikedBy;
 
-    public ArticleDetailsDto(String author, LocalDateTime publishedAt, String content,
-                             long likeCount, long dislikeCount,
-                             List<String> likedBy, List<String> dislikedBy) {
+    public ArticleDetailsDto(Long id, String author, LocalDateTime publishedAt, String content, long likeCount, long dislikeCount, List<String> likedBy, List<String> dislikedBy) {
+        this.id = id;
         this.author = author;
         this.publishedAt = publishedAt;
         this.content = content;
@@ -23,12 +26,4 @@ public class ArticleDetailsDto {
         this.likedBy = likedBy;
         this.dislikedBy = dislikedBy;
     }
-
-    public String getAuthor() { return author; }
-    public LocalDateTime getPublishedAt() { return publishedAt; }
-    public String getContent() { return content; }
-    public long getLikeCount() { return likeCount; }
-    public long getDislikeCount() { return dislikeCount; }
-    public List<String> getLikedBy() { return likedBy; }
-    public List<String> getDislikedBy() { return dislikedBy; }
 }
