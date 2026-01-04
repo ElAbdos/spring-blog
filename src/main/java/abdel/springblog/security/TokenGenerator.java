@@ -21,8 +21,6 @@ public class TokenGenerator {
     public TokenGenerator() {
         this.key = Keys.hmacShaKeyFor(SECRET_KEY.getBytes());
     }
-
-    // Générer un token JWT a partir de la cle d'authentification
     public String generateToken(Authentication authentication) {
         String username = authentication.getName();
         String roles = authentication.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.joining(","));

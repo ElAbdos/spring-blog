@@ -50,7 +50,7 @@ public class ArticleController {
      * Créer un nouvel article
      */
     @PostMapping
-    @PreAuthorize("hasRole('AUTHOR') or hasRole('MODERATOR')")
+    @PreAuthorize("hasRole('PUBLISHER') or hasRole('MODERATOR')")
     public ArticlePublicDto create(@RequestBody ArticleCreateDto dto) {
         return service.create(dto);
     }
@@ -59,7 +59,7 @@ public class ArticleController {
      * Mettre à jour le contenu d'un article
      */
     @PutMapping("/{id}")
-    @PreAuthorize("hasRole('AUTHOR') or hasRole('MODERATOR')")
+    @PreAuthorize("hasRole('PUBLISHER') or hasRole('MODERATOR')")
     public ArticlePublicDto update(@PathVariable Long id, @RequestBody Map<String, String> body, Authentication authentication) {
         String content = body.get("content");
         return service.updateContent(id, content, authentication.getName());
@@ -69,7 +69,7 @@ public class ArticleController {
      * Supprimer un article
      */
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasRole('AUTHOR') or hasRole('MODERATOR')")
+    @PreAuthorize("hasRole('PUBLISHER') or hasRole('MODERATOR')")
     public void delete(@PathVariable Long id, Authentication authentication) {
         service.delete(id, authentication.getName());
     }

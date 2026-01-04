@@ -31,8 +31,9 @@ public class R505WebSecurityConfigurer {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.csrf(csrf -> csrf.disable()).cors(cors -> cors.disable())
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/login", "/", "/*.html", "/*.css", "/*.js").permitAll()
+                        .requestMatchers("/login", "/register", "/", "/*.html", "/*.css", "/*.js").permitAll()
                         .requestMatchers(HttpMethod.GET, "/articles", "/articles/**").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/articles/*/reactions").permitAll()
                         .anyRequest().authenticated()
                 )
                 .exceptionHandling(ex -> ex.authenticationEntryPoint(authEntryPoint))

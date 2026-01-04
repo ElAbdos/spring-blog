@@ -3,27 +3,215 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>API Documentation - Spring Blog</title>
+    <title>Spring Blog API - Documentation</title>
     <link rel="stylesheet" href="api-tester.css">
+    <style>
+        .auth-tabs {
+            display: flex;
+            gap: 0;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #e9ecef;
+        }
+        .auth-tab {
+            padding: 12px 24px;
+            background: transparent;
+            border: none;
+            border-bottom: 3px solid transparent;
+            cursor: pointer;
+            font-size: 15px;
+            font-weight: 500;
+            color: #6c757d;
+            transition: all 0.2s;
+        }
+        .auth-tab:hover {
+            color: #007bff;
+            background: #f8f9fa;
+        }
+        .auth-tab.active {
+            color: #007bff;
+            border-bottom-color: #007bff;
+        }
+        .auth-form {
+            display: none;
+        }
+        .auth-form.active {
+            display: block;
+        }
+        .auth-section {
+            background: white;
+            border: 1px solid #dee2e6;
+            border-radius: 8px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+        .auth-section h2 {
+            margin-bottom: 20px;
+            color: #2c3e50;
+            font-size: 20px;
+            font-weight: 600;
+        }
+        .auth-message {
+            margin-top: 15px;
+            padding: 12px 16px;
+            border-radius: 6px;
+            font-size: 14px;
+            display: none;
+        }
+        .auth-message.success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        .auth-message.error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        .auth-success {
+            background: #d4edda;
+            padding: 16px;
+            border-radius: 6px;
+            margin-bottom: 16px;
+            color: #155724;
+            font-size: 15px;
+            border: 1px solid #c3e6cb;
+        }
+        .token-display {
+            background: #f8f9fa;
+            padding: 16px;
+            border-radius: 6px;
+            margin-bottom: 16px;
+            border: 1px solid #dee2e6;
+        }
+        .token-display strong {
+            display: block;
+            margin-bottom: 8px;
+            color: #495057;
+        }
+        .token-text {
+            font-family: 'Monaco', 'Courier New', monospace;
+            font-size: 11px;
+            word-break: break-all;
+            color: #495057;
+            background: white;
+            padding: 12px;
+            border-radius: 4px;
+            max-height: 100px;
+            overflow-y: auto;
+            border: 1px solid #e9ecef;
+        }
+        .info-banner {
+            background: #e7f3ff;
+            border-left: 4px solid #007bff;
+            padding: 16px 20px;
+            margin-bottom: 24px;
+            border-radius: 4px;
+            font-size: 14px;
+            color: #004085;
+        }
+        .endpoint-badge {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: 600;
+            margin-left: 8px;
+        }
+        .endpoint-badge.public {
+            background: #d4edda;
+            color: #155724;
+        }
+        .endpoint-badge.protected {
+            background: #fff3cd;
+            color: #856404;
+        }
+        .help-text {
+            font-size: 13px;
+            color: #6c757d;
+            margin-top: 6px;
+        }
+    </style>
 </head>
 <body>
     <div class="header">
         <div class="header-content">
-            <h1>Documentation API - Spring Blog</h1>
-            <a href="index.html" class="back-link">← Retour</a>
+            <h1>Spring Blog API - Documentation</h1>
+            <a href="index.html" class="back-link">Retour à l'accueil</a>
         </div>
     </div>
 
     <div class="container">
+        <div class="auth-section">
+            <h2>Authentification & Inscription</h2>
+
+            <div class="auth-tabs">
+                <button class="auth-tab active" onclick="switchAuthTab('login')">Connexion</button>
+                <button class="auth-tab" onclick="switchAuthTab('register')">Inscription</button>
+            </div>
+            <div id="loginForm" class="auth-form active">
+                <div class="form-group">
+                    <label>Nom d'utilisateur</label>
+                    <input type="text" id="loginUsername" placeholder="Votre nom d'utilisateur" value="abdel">
+                </div>
+                <div class="form-group">
+                    <label>Mot de passe</label>
+                    <input type="password" id="loginPassword" placeholder="Votre mot de passe" value="abdel123">
+                </div>
+                <div class="help-text">exmple de test ; login : abdel , mdp : abdel123</div>
+                <button onclick="performLogin()" class="btn btn-primary">Se connecter</button>
+                <div id="loginMessage" class="auth-message"></div>
+            </div>
+
+            <div id="registerForm" class="auth-form">
+                <div class="form-group">
+                    <label>Nom d'utilisateur</label>
+                    <input type="text" id="registerUsername" placeholder="Choisissez un nom d'utilisateur">
+                    <div class="help-text">Minimum 3 caractères, lettres et chiffres uniquement</div>
+                </div>
+                <div class="form-group">
+                    <label>Mot de passe</label>
+                    <input type="password" id="registerPassword" placeholder="Choisissez un mot de passe sécurisé">
+                </div>
+                <div class="form-group">
+                    <label>Rôle</label>
+                    <select id="registerRole">
+                        <option value="READER">Lecteur (lecture seule)</option>
+                        <option value="AUTHOR">Auteur (création d'articles)</option>
+                        <option value="MODERATOR">MODERATEUR (tous les droits)</option>
+                    </select>
+                </div>
+                <button onclick="performRegister()" class="btn btn-success">Créer un compte</button>
+                <div id="registerMessage" class="auth-message"></div>
+            </div>
+
+            <div id="authInfo" style="display:none;">
+                <div class="auth-success">
+                    Connecté en tant que : <strong id="currentUser"></strong>
+                </div>
+                <div class="token-display">
+                    <strong>Token JWT (inclus automatiquement dans les requêtes)</strong>
+                    <div id="tokenDisplay" class="token-text"></div>
+                </div>
+                <button onclick="performLogout()" class="btn btn-danger">Se déconnecter</button>
+            </div>
+        </div>
+
+        <div class="info-banner">
+            <strong>Information :</strong> Les endpoints GET sont publics. Les endpoints POST, PUT et DELETE nécessitent une authentification.
+        </div>
+
         <div class="endpoint">
             <div class="endpoint-header">
                 <span class="method get">GET</span>
                 <span class="path">/articles</span>
-                <h3>Lister tous les articles</h3>
+                <h3>Lister tous les articles
+                    <span class="endpoint-badge public">Public</span>
+                </h3>
             </div>
             <div class="endpoint-body">
-                <p class="description">Retourne la liste de tous les articles avec leurs informations de base.</p>
-                <button onclick="listArticles()" class="btn btn-primary">Tester</button>
+                <p class="description">Récupère la liste complète des articles publiés sur la plateforme.</p>
+                <button onclick="listArticles()" class="btn btn-primary">Exécuter</button>
             </div>
         </div>
 
@@ -31,15 +219,17 @@
             <div class="endpoint-header">
                 <span class="method get">GET</span>
                 <span class="path">/articles/{id}</span>
-                <h3>Obtenir un article</h3>
+                <h3>Obtenir un article spécifique
+                    <span class="endpoint-badge public">Public</span>
+                </h3>
             </div>
             <div class="endpoint-body">
-                <p class="description">Retourne les informations d'un article spécifique par son ID.</p>
+                <p class="description">Récupère les informations d'un article par son identifiant.</p>
                 <div class="form-group">
                     <label>ID de l'article</label>
-                    <input type="number" id="getArticleId" placeholder="1">
+                    <input type="number" id="getArticleId" placeholder="Ex: 1">
                 </div>
-                <button onclick="getArticle()" class="btn btn-primary">Tester</button>
+                <button onclick="getArticle()" class="btn btn-primary">Exécuter</button>
             </div>
         </div>
 
@@ -47,15 +237,17 @@
             <div class="endpoint-header">
                 <span class="method get">GET</span>
                 <span class="path">/articles/{id}/details</span>
-                <h3>Détails complets d'un article</h3>
+                <h3>Détails complets avec réactions
+                    <span class="endpoint-badge public">Public</span>
+                </h3>
             </div>
             <div class="endpoint-body">
-                <p class="description">Retourne les informations détaillées incluant le nombre de likes/dislikes et la liste des utilisateurs ayant réagi.</p>
+                <p class="description">Récupère les détails d'un article incluant les statistiques de likes et dislikes.</p>
                 <div class="form-group">
                     <label>ID de l'article</label>
-                    <input type="number" id="getDetailsId" placeholder="1">
+                    <input type="number" id="getDetailsId" placeholder="Ex: 1">
                 </div>
-                <button onclick="getArticleDetails()" class="btn btn-primary">Tester</button>
+                <button onclick="getArticleDetails()" class="btn btn-primary">Exécuter</button>
             </div>
         </div>
 
@@ -63,39 +255,42 @@
             <div class="endpoint-header">
                 <span class="method post">POST</span>
                 <span class="path">/articles</span>
-                <h3>Créer un article</h3>
+                <h3>Créer un nouvel article
+                    <span class="endpoint-badge protected">Authentification requise</span>
+                </h3>
             </div>
             <div class="endpoint-body">
-                <p class="description">Crée un nouvel article. L'auteur doit exister dans la base de données.</p>
+                <p class="description">Crée un nouvel article. Nécessite le rôle AUTHOR ou MODERATOR.</p>
                 <div class="form-group">
                     <label>Nom d'utilisateur de l'auteur</label>
-                    <input type="text" id="createAuthor" placeholder="alice">
+                    <input type="text" id="createAuthor" placeholder="Ex: alice">
                 </div>
                 <div class="form-group">
                     <label>Contenu de l'article</label>
-                    <textarea id="createContent" placeholder="Contenu de l'article..."></textarea>
+                    <textarea id="createContent" placeholder="Rédigez votre article ici..." rows="5"></textarea>
                 </div>
-                <button onclick="createArticle()" class="btn btn-success">Créer</button>
+                <button onclick="createArticle()" class="btn btn-success">Créer l'article</button>
             </div>
         </div>
-
         <div class="endpoint">
             <div class="endpoint-header">
                 <span class="method put">PUT</span>
                 <span class="path">/articles/{id}</span>
-                <h3>Modifier un article</h3>
+                <h3>Modifier un article
+                    <span class="endpoint-badge protected">Authentification requise</span>
+                </h3>
             </div>
             <div class="endpoint-body">
-                <p class="description">Met à jour le contenu d'un article existant.</p>
+                <p class="description">Modifie le contenu d'un article existant. Seul l'auteur ou un modérateur peut modifier.</p>
                 <div class="form-group">
                     <label>ID de l'article</label>
-                    <input type="number" id="updateArticleId" placeholder="1">
+                    <input type="number" id="updateArticleId" placeholder="Ex: 1">
                 </div>
                 <div class="form-group">
                     <label>Nouveau contenu</label>
-                    <textarea id="updateContent" placeholder="Nouveau contenu..."></textarea>
+                    <textarea id="updateContent" placeholder="Nouveau contenu de l'article..." rows="5"></textarea>
                 </div>
-                <button onclick="updateArticle()" class="btn btn-warning">Modifier</button>
+                <button onclick="updateArticle()" class="btn btn-warning">Mettre à jour</button>
             </div>
         </div>
 
@@ -103,13 +298,15 @@
             <div class="endpoint-header">
                 <span class="method delete">DELETE</span>
                 <span class="path">/articles/{id}</span>
-                <h3>Supprimer un article</h3>
+                <h3>Supprimer un article
+                    <span class="endpoint-badge protected">Authentification requise</span>
+                </h3>
             </div>
             <div class="endpoint-body">
-                <p class="description">Supprime définitivement un article et toutes ses réactions.</p>
+                <p class="description">Supprime définitivement un article. Seul l'auteur ou un modérateur peut supprimer.</p>
                 <div class="form-group">
                     <label>ID de l'article</label>
-                    <input type="number" id="deleteArticleId" placeholder="1">
+                    <input type="number" id="deleteArticleId" placeholder="Ex: 1">
                 </div>
                 <button onclick="deleteArticle()" class="btn btn-danger">Supprimer</button>
             </div>
@@ -119,17 +316,19 @@
             <div class="endpoint-header">
                 <span class="method post">POST</span>
                 <span class="path">/articles/{id}/reactions</span>
-                <h3>Ajouter une réaction</h3>
+                <h3>Ajouter une réaction
+                    <span class="endpoint-badge public">Public</span>
+                </h3>
             </div>
             <div class="endpoint-body">
-                <p class="description">Ajoute ou modifie une réaction (like/dislike) d'un utilisateur sur un article.</p>
+                <p class="description">Ajoute ou modifie une réaction (like ou dislike) sur un article.</p>
                 <div class="form-group">
                     <label>ID de l'article</label>
-                    <input type="number" id="reactionArticleId" placeholder="1">
+                    <input type="number" id="reactionArticleId" placeholder="Ex: 1">
                 </div>
                 <div class="form-group">
                     <label>Nom d'utilisateur</label>
-                    <input type="text" id="reactionUsername" placeholder="bob">
+                    <input type="text" id="reactionUsername" placeholder="Ex: bob">
                 </div>
                 <div class="form-group">
                     <label>Type de réaction</label>
@@ -143,13 +342,12 @@
         </div>
 
         <div class="response-section">
-            <h2>Réponse</h2>
+            <h2>Réponse de l'API</h2>
             <div id="response" class="response-box">
                 <p class="placeholder">La réponse de l'API s'affichera ici après l'exécution d'une requête.</p>
             </div>
         </div>
     </div>
-
     <script src="api-tester.js"></script>
 </body>
 </html>

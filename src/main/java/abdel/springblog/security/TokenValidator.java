@@ -13,7 +13,7 @@ import java.util.stream.Collectors;
 @Component
 public class TokenValidator {
 
-    private static final String SECRET_KEY = "votre-cle-secrete-super-longue-pour-jwt-minimum-256-bits-necessaires-ici";
+    private static final String SECRET_KEY = "VyAUR86udZI2xhN3ubzuSiB7J9nAP86nglxcA5QmflO";
     private final SecretKey key;
 
     public TokenValidator() {
