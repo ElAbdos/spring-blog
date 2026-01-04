@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API Documentation - Spring Blog</title>
+    <link rel="stylesheet" href="api-tester.css">
+</head>
+<body>
+    <div class="header">
+        <div class="header-content">
+            <h1>Documentation API - Spring Blog</h1>
+            <a href="index.html" class="back-link">← Retour</a>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="endpoint">
+            <div class="endpoint-header">
+                <span class="method get">GET</span>
+                <span class="path">/articles</span>
+                <h3>Lister tous les articles</h3>
+            </div>
+            <div class="endpoint-body">
+                <p class="description">Retourne la liste de tous les articles avec leurs informations de base.</p>
+                <button onclick="listArticles()" class="btn btn-primary">Tester</button>
+            </div>
+        </div>
+
+        <div class="endpoint">
+            <div class="endpoint-header">
+                <span class="method get">GET</span>
+                <span class="path">/articles/{id}</span>
+                <h3>Obtenir un article</h3>
+            </div>
+            <div class="endpoint-body">
+                <p class="description">Retourne les informations d'un article spécifique par son ID.</p>
+                <div class="form-group">
+                    <label>ID de l'article</label>
+                    <input type="number" id="getArticleId" placeholder="1">
+                </div>
+                <button onclick="getArticle()" class="btn btn-primary">Tester</button>
+            </div>
+        </div>
+
+        <div class="endpoint">
+            <div class="endpoint-header">
+                <span class="method get">GET</span>
+                <span class="path">/articles/{id}/details</span>
+                <h3>Détails complets d'un article</h3>
+            </div>
+            <div class="endpoint-body">
+                <p class="description">Retourne les informations détaillées incluant le nombre de likes/dislikes et la liste des utilisateurs ayant réagi.</p>
+                <div class="form-group">
+                    <label>ID de l'article</label>
+                    <input type="number" id="getDetailsId" placeholder="1">
+                </div>
+                <button onclick="getArticleDetails()" class="btn btn-primary">Tester</button>
+            </div>
+        </div>
+
+        <div class="endpoint">
+            <div class="endpoint-header">
+                <span class="method post">POST</span>
+                <span class="path">/articles</span>
+                <h3>Créer un article</h3>
+            </div>
+            <div class="endpoint-body">
+                <p class="description">Crée un nouvel article. L'auteur doit exister dans la base de données.</p>
+                <div class="form-group">
+                    <label>Nom d'utilisateur de l'auteur</label>
+                    <input type="text" id="createAuthor" placeholder="alice">
+                </div>
+                <div class="form-group">
+                    <label>Contenu de l'article</label>
+                    <textarea id="createContent" placeholder="Contenu de l'article..."></textarea>
+                </div>
+                <button onclick="createArticle()" class="btn btn-success">Créer</button>
+            </div>
+        </div>
+
+        <div class="endpoint">
+            <div class="endpoint-header">
+                <span class="method put">PUT</span>
+                <span class="path">/articles/{id}</span>
+                <h3>Modifier un article</h3>
+            </div>
+            <div class="endpoint-body">
+                <p class="description">Met à jour le contenu d'un article existant.</p>
+                <div class="form-group">
+                    <label>ID de l'article</label>
+                    <input type="number" id="updateArticleId" placeholder="1">
+                </div>
+                <div class="form-group">
+                    <label>Nouveau contenu</label>
+                    <textarea id="updateContent" placeholder="Nouveau contenu..."></textarea>
+                </div>
+                <button onclick="updateArticle()" class="btn btn-warning">Modifier</button>
+            </div>
+        </div>
+
+        <div class="endpoint">
+            <div class="endpoint-header">
+                <span class="method delete">DELETE</span>
+                <span class="path">/articles/{id}</span>
+                <h3>Supprimer un article</h3>
+            </div>
+            <div class="endpoint-body">
+                <p class="description">Supprime définitivement un article et toutes ses réactions.</p>
+                <div class="form-group">
+                    <label>ID de l'article</label>
+                    <input type="number" id="deleteArticleId" placeholder="1">
+                </div>
+                <button onclick="deleteArticle()" class="btn btn-danger">Supprimer</button>
+            </div>
+        </div>
+
+        <div class="endpoint">
+            <div class="endpoint-header">
+                <span class="method post">POST</span>
+                <span class="path">/articles/{id}/reactions</span>
+                <h3>Ajouter une réaction</h3>
+            </div>
+            <div class="endpoint-body">
+                <p class="description">Ajoute ou modifie une réaction (like/dislike) d'un utilisateur sur un article.</p>
+                <div class="form-group">
+                    <label>ID de l'article</label>
+                    <input type="number" id="reactionArticleId" placeholder="1">
+                </div>
+                <div class="form-group">
+                    <label>Nom d'utilisateur</label>
+                    <input type="text" id="reactionUsername" placeholder="bob">
+                </div>
+                <div class="form-group">
+                    <label>Type de réaction</label>
+                    <select id="reactionType">
+                        <option value="LIKE">Like</option>
+                        <option value="DISLIKE">Dislike</option>
+                    </select>
+                </div>
+                <button onclick="addReaction()" class="btn btn-success">Réagir</button>
+            </div>
+        </div>
+
+        <div class="response-section">
+            <h2>Réponse</h2>
+            <div id="response" class="response-box">
+                <p class="placeholder">La réponse de l'API s'affichera ici après l'exécution d'une requête.</p>
+            </div>
+        </div>
+    </div>
+
+    <script src="api-tester.js"></script>
+</body>
+</html>
+
