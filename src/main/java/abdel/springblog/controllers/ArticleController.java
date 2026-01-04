@@ -5,6 +5,8 @@ import abdel.springblog.dto.ArticleDetailsDto;
 import abdel.springblog.dto.ArticlePublicDto;
 import abdel.springblog.models.ReactionType;
 import abdel.springblog.services.ArticleService;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -48,6 +50,7 @@ public class ArticleController {
      * Créer un nouvel article
      */
     @PostMapping
+    @PreAuthorize("hasRole('AUTHOR') or hasRole('ADMIN')")
     public ArticlePublicDto create(@RequestBody ArticleCreateDto dto) {
         return service.create(dto);
     }
@@ -56,17 +59,19 @@ public class ArticleController {
      * Mettre à jour le contenu d'un article
      */
     @PutMapping("/{id}")
-    public ArticlePublicDto update(@PathVariable Long id, @RequestBody Map<String, String> body) {
+    @PreAuthorize("hasRole('AUTHOR') or hasRole('ADMIN')")
+    public ArticlePublicDto update(@PathVariable Long id, @RequestBody Map<String, String> body, Authentication authentication) {
         String content = body.get("content");
-        return service.updateContent(id, content);
+        return service.updateContent(id, content, authentication.getName());
     }
 
     /*
      * Supprimer un article
      */
     @DeleteMapping("/{id}")
-    public void delete(@PathVariable Long id) {
-        service.delete(id);
+    @PreAuthorize("hasRole('AUTHOR') or hasRole('ADMIN')")
+    public void delete(@PathVariable Long id, Authentication authentication) {
+        service.delete(id, authentication.getName());
     }
 
     /*

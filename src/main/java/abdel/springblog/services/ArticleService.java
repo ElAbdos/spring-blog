@@ -68,8 +68,15 @@ public class ArticleService {
     /*
      * Met à jour le contenu d'un article
      */
-    public ArticlePublicDto updateContent(Long id, String newContent) {
-        Article a = articleRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Article introuvable: " + id));
+    public ArticlePublicDto updateContent(Long id, String newContent, String currentUsername) {
+        Article a = articleRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Article introuvable: " + id));
+
+        User currentUser = userRepository.findByUsername(currentUsername)
+                .orElseThrow(() -> new IllegalArgumentException("Utilisateur introuvable"));
+        if (!a.getAuthor().getUsername().equals(currentUsername) && currentUser.getRole() != Role.MODERATOR) {
+            throw new SecurityException("Vous n'avez pas le droit de modifier cet article");
+        }
         a.setContent(newContent);
         return toPublicDto(a);
     }
@@ -77,9 +84,11 @@ public class ArticleService {
     /*
      * Supprime un article par son ID
      */
-    public void delete(Long id) {
-        if (!articleRepository.existsById(id)) {
-            throw new IllegalArgumentException("Article introuvable: " + id);
+    public void delete(Long id, String currentUsername) {
+        Article a = articleRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Article introuvable: " + id));
+        User currentUser = userRepository.findByUsername(currentUsername).orElseThrow(() -> new IllegalArgumentException("Utilisateur introuvable"));
+        if (!a.getAuthor().getUsername().equals(currentUsername) && currentUser.getRole() != Role.MODERATOR) {
+            throw new SecurityException("Vous n'avez pas le droit de supprimer cet article");
         }
         articleRepository.deleteById(id);
     }
